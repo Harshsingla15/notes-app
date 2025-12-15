@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./database/db.js");
+const authRoute = require("./routes/auth.js");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -14,6 +15,8 @@ app.use(cors());
 app.get("/api/health", (req, res) => {
   res.send("HEALTH API");
 });
+
+app.use("/notes/user", authRoute);
 
 //start server
 const startServer = async () => {
