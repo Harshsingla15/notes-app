@@ -4,6 +4,8 @@ require("dotenv").config();
 const connectDB = require("./database/db.js");
 const authRoute = require("./routes/auth.js");
 
+const authMiddleware = require("./middleware/authMiddleware.js");
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -12,11 +14,14 @@ app.use(express.json());
 app.use(cors());
 
 //routes
-app.get("/api/health", (req, res) => {
-  res.send("HEALTH API");
+app.get("/api/health", authMiddleware, (req, res) => {
+  if (req.user) {
+    return res.json(req.user);
+  }
+  return res.send("HEALTH API");
 });
 
-app.use("/notes/user", authRoute);
+app.use("/api/auth", authRoute);
 
 //start server
 const startServer = async () => {
