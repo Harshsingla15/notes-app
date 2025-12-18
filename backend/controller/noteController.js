@@ -1,4 +1,5 @@
 const Note = require("../models/Note.js");
+
 const createNote = async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -30,4 +31,21 @@ const createNote = async (req, res) => {
   }
 };
 
-module.exports = createNote;
+const getNotes = async (req, res) => {
+  try {
+    const userId = req.user;
+    const notes = await Note.find({ user: userId }).sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      message: "All notes returned",
+      notes,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Not able to fetch notes",
+    });
+  }
+};
+
+module.exports = { createNote, getNotes };
