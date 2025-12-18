@@ -58,19 +58,20 @@ const login = async (req, res) => {
     }
     const accessToken = jwt.sign(
       {
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-        },
+        id: user._id,
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
     res.status(200).json({
       success: true,
-      message: "User is successfully sign in",
-      accessToken: accessToken,
+      message: "Login Successfull",
+      accessToken,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (err) {
     console.error(err);
