@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./database/db.js");
 const authRoute = require("./routes/auth.js");
+const noteRoute = require("./routes/note.js");
 
 const authMiddleware = require("./middleware/authMiddleware.js");
 
@@ -22,6 +23,7 @@ app.get("/api/health", authMiddleware, (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
+app.use("/api", authMiddleware, noteRoute);
 
 //start server
 const startServer = async () => {
