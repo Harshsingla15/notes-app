@@ -1,4 +1,5 @@
 const Note = require("../models/Note.js");
+const { findOneAndDelete } = require("../models/User.js");
 
 const createNote = async (req, res) => {
   try {
@@ -88,4 +89,31 @@ const updateNote = async (req, res) => {
   }
 };
 
-module.exports = { createNote, getNotes, updateNote };
+const deleteNote = async (req, res) => {
+  try {
+    const { id: noteId } = req.params;
+    const userId = req.user;
+    const deletedNote = await Note.findOneAndDelete({
+      _id: noteId,
+      user: userId,
+    });
+    if (!deletedNote) {
+      return res.status(404).json({
+        success: false,
+        message: "Note does not exist or User is not authorized",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Note is successfully deleted",
+      deletedNote,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+module.exports = { createNote, getNotes, updateNote, deleteNote };
